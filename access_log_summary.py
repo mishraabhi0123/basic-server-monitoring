@@ -1,8 +1,8 @@
 import sys
 from datetime import datetime
 
-# ELB = "nginx"
-ELB = "apache"
+ELB = "nginx"
+# ELB = "apache"
 
 def convert_to_date(date_string):
   datetime_object = datetime.strptime(date_string, "%d/%b/%Y:%H:%M:%S")
@@ -26,10 +26,16 @@ def get_data_nginx(line):
     status_code = components[8]
     log_time = convert_to_date(components[3][1:])
     method_string = components[5][1:]
+    try:
+        response_time = line.split('" ')[-1].split(" ")[0]
+        response_time = float(response_time) * 100
+    except:
+        response_time = None
     return {
         "status_code": status_code,
         "log_time": log_time,
-        "method": method_string
+        "method": method_string,
+        "response_time": response_time
     }
 
 
